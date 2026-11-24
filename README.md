@@ -1,75 +1,56 @@
-# React + TypeScript + Vite
+# E-commerce Web
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Frontend do e-commerce construído com React, TypeScript, Vite e Tailwind CSS. A aplicação consome uma API Rails, cuja URL é definida por variável de ambiente.
 
-Currently, two official plugins are available:
+## Pré-requisitos
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Node.js em uma versão LTS (recomendada: 20 ou superior)
+- npm (instalado junto com o Node.js)
+- Backend Rails em execução e acessível pela máquina local
 
-## React Compiler
+## Como executar localmente
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+1. Instale as dependências. Como o projeto possui `package-lock.json`, prefira `npm ci` para reproduzir as versões previstas:
 
-## Expanding the ESLint configuration
+   ```bash
+   npm ci
+   ```
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+2. Crie o arquivo de ambiente a partir do exemplo:
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+   ```bash
+   cp .env.example .env
+   ```
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+3. Informe em `.env` a URL base da API Rails. Para o backend local padrão:
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+   ```dotenv
+   VITE_API_BASE_URL=http://localhost:3000
+   ```
 
-```
+   Caso a API esteja em outro endereço ou porta, substitua o valor pela URL correspondente. Não inclua uma barra no final.
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+4. Inicie o servidor de desenvolvimento:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+   ```bash
+   npm run dev
+   ```
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+5. Abra o endereço exibido no terminal — normalmente [http://localhost:5173](http://localhost:5173).
 
-```
+## Comandos disponíveis
+
+| Comando | Descrição |
+| --- | --- |
+| `npm run dev` | Inicia o servidor de desenvolvimento com atualização automática. |
+| `npm run build` | Verifica os tipos e gera a build de produção em `dist/`. |
+| `npm run preview` | Serve localmente a build de produção já gerada. |
+| `npm run lint` | Executa a análise estática com ESLint. |
+
+## Integração com a API
+
+O cliente HTTP compartilhado está em `src/lib/api.ts`. Ele usa `VITE_API_BASE_URL` como base e exibe um erro na inicialização caso essa variável não esteja definida. Garanta também que o backend permita requisições da origem local do Vite (`http://localhost:5173`) por CORS.
+
+Após modificar `.env`, reinicie `npm run dev` para que o Vite carregue o novo valor.
+
+> O arquivo `.env` contém configurações locais e não deve ser versionado. Use `.env.example` como referência para as variáveis exigidas.
